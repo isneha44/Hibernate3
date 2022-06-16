@@ -1,12 +1,20 @@
 import entity.Coustomer;
 import entity.Item;
 import entity.Order;
-import javafx.application.Application;
-import javafx.stage.Stage;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import util.FactoryConfiguration;
 
 public class AppInitializer {
     public static void main(String[] args) {
-        Coustomer c1 = new Coustomer();
+
+        Session session = FactoryConfiguration.getInstance().getSession();
+
+
+        Transaction transaction = session.beginTransaction();
+       Coustomer c1 = new Coustomer();
+
+
 
         c1.setId("C001");
         c1.setName("Imalka");
@@ -47,6 +55,10 @@ public class AppInitializer {
 
         c1.getOrderList().add(O1);
         c1.getOrderList().add(O2);
+
+        transaction.commit();
+
+        session.close();
 
 
     }

@@ -1,12 +1,13 @@
 package util;
 
+
 import entity.Coustomer;
 import entity.Item;
 import entity.Order;
 import entity.OrderDetail;
-
-import javax.security.auth.login.AppConfigurationEntry;
-import javax.security.auth.login.Configuration;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 public class FactoryConfiguration {
 
@@ -14,26 +15,23 @@ public class FactoryConfiguration {
     private SessionFactory sessionFactory;
 
     private FactoryConfiguration() {
-        Configuration configuration= new Configuration() {
-            public Object configure() {
-            }
-
-            @Override
-            public AppConfigurationEntry[] getAppConfigurationEntry(String name) {
-                return new AppConfigurationEntry[0];
-            }
-        }.configure().addAnnotatedClass(Coustomer.class)
+        // configure() -> load and config Hibernate.cfg.xml file to SessionFactory
+        // addAnnotatedClass() -> define which Entity that gonna use to Persist
+        Configuration configuration = new Configuration().configure()
+                .addAnnotatedClass(Coustomer.class)
                 .addAnnotatedClass(Item.class)
                 .addAnnotatedClass(Order.class)
                 .addAnnotatedClass(OrderDetail.class);
+
+        // build a SessionFactory and assign it to sessionFactory reference
         sessionFactory = configuration.buildSessionFactory();
     }
-
-    public static FactoryConfiguration getInstance(){
-        return (factoryConfiguration==null)? factoryConfiguration=new FactoryConfiguration() : factoryConfiguration;
+    public static FactoryConfiguration getInstance() {
+        return (factoryConfiguration == null) ? factoryConfiguration = new FactoryConfiguration()
+                : factoryConfiguration;
     }
-
-    public Session getSession(){
+    // return a new Session through sessionFactory
+    public Session getSession() {
         return sessionFactory.openSession();
     }
 }
